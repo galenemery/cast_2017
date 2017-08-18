@@ -1,0 +1,36 @@
+{
+  "name": "base",
+  "description": "Base Server Role",
+  "default_attributes": {
+    "chef_client": {
+      "interval": 300,
+      "splay": 60,
+      "config": {
+        "ssl_verify_mode": ":verify_none",
+        "log_level": ":info",
+        "data_collector.server_url": "https://galen-automate/data-collector/v0/",
+        "data_collector.token": "93a49a4f2482c64126f7b6015e6b0f30284287ee4054ff8807fb63d9cbd1c506"
+      }
+    },
+    "audit": {
+        "reporter": "chef-server-automate",
+        "fetcher": "chef-server",
+        "profiles": [
+          {
+            "name": "inspec-cve",
+            "compliance": "admin/inspec-cve"
+          },
+          {
+            "name": "base ssh",
+            "compliance": "admin/ssh-baseline"
+          }
+        ]
+    }
+  },
+  "run_list": [
+    "recipe[chef-client::delete_validation]",
+    "recipe[chef-client::config]",
+    "recipe[chef-client]",
+    "recipe[base_cve]"
+  ]
+}
